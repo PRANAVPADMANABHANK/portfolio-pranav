@@ -88,9 +88,31 @@
     display:flex; align-items:center; gap:8px;
   }
   .logo .dot{width:7px; height:7px; border-radius:50%; background:var(--teal); box-shadow:0 0 10px var(--teal);}
+  .nav-left{display:flex; align-items:center; gap:16px;}
+  .nav-right{display:flex; align-items:center; gap:14px;}
   nav.links{display:flex; gap:32px; font-size:14px; color:var(--muted);}
   nav.links a{transition:color .2s;}
   nav.links a:hover{color:var(--text);}
+  .ai-cta{
+    display:inline-flex; align-items:center; gap:6px;
+    background:linear-gradient(90deg, var(--teal), var(--amber));
+    color:var(--ink); font-weight:700; font-size:12.5px;
+    font-family:'JetBrains Mono',monospace;
+    padding:8px 14px; border-radius:20px;
+    white-space:nowrap;
+    animation:ctaPulse 2.6s infinite;
+    transition:transform .2s, filter .2s;
+  }
+  .ai-cta:hover{transform:translateY(-1px); filter:brightness(1.1);}
+  .ai-cta-emoji{display:inline-block; animation:sparkle 1.8s infinite;}
+  @keyframes ctaPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(53,214,196,0.4);}
+    50%{box-shadow:0 0 0 7px rgba(53,214,196,0);}
+  }
+  @keyframes sparkle{
+    0%,100%{transform:scale(1) rotate(0deg);}
+    50%{transform:scale(1.2) rotate(12deg);}
+  }
   .nav-cta{
     font-size:13px; font-family:'JetBrains Mono',monospace; color:var(--teal);
     border:1px solid rgba(53,214,196,0.35); padding:8px 16px; border-radius:6px;
@@ -343,9 +365,11 @@
 
   @media (max-width:880px){
     nav.links{display:none;}
-    .nav-cta{display:inline-flex; padding:7px 10px; font-size:11px; margin-left:auto;}
+    .nav-cta{display:none;}
     .burger{display:flex;}
     .mobile-menu{display:flex;}
+    .nav-left{gap:10px;}
+    .ai-cta{padding:7px 10px; font-size:11.5px;}
     .hero-grid{grid-template-columns:1fr; gap:44px;}
     .hero-visual{order:-1;}
     .hero h1{font-size:38px;}
@@ -357,6 +381,11 @@
     .contact-box{padding:36px 22px;}
     .wrap{padding:0 20px;}
   }
+  @media (max-width:380px){
+    .logo{font-size:15px;}
+    .ai-cta-text{display:none;}
+    .ai-cta{padding:8px 9px;}
+  }
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important; transition:none !important;}
     .reveal{opacity:1; transform:none;}
@@ -367,7 +396,12 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <div class="logo"><span class="dot"></span>Pranav K</div>
+    <div class="nav-left">
+      <div class="logo"><span class="dot"></span>Pranav K</div>
+      <a class="ai-cta" href="javascript:void(0)" data-target="#job-match" data-nav="job-match">
+        <span class="ai-cta-emoji">✨</span><span class="ai-cta-text">AI Job Match</span>
+      </a>
+    </div>
     <nav class="links">
       <a href="javascript:void(0)" data-target="#impact" data-nav="impact">Impact</a>
       <a href="javascript:void(0)" data-target="#about" data-nav="about">About</a>
@@ -376,28 +410,30 @@
       <a href="javascript:void(0)" data-target="#skills" data-nav="skills">Skills</a>
       <a href="javascript:void(0)" data-target="#contact" data-nav="contact">Contact</a>
     </nav>
-    <a class="nav-cta" href="javascript:void(0)" data-target="#job-match">AI Job Match</a>
-    <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-right">
+      <a class="nav-cta" href="javascript:void(0)" data-target="#contact">Get in touch</a>
+      <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </div>
   <div class="progress-bar" id="progressBar"></div>
 </header>
 
 <nav class="mobile-menu" id="mobileMenu">
-  <a href="javascript:void(0)" data-target="#job-match" data-nav="job-match">Job Match</a>
   <a href="javascript:void(0)" data-target="#impact" data-nav="impact">Impact</a>
   <a href="javascript:void(0)" data-target="#about" data-nav="about">About</a>
   <a href="javascript:void(0)" data-target="#experience" data-nav="experience">Experience</a>
   <a href="javascript:void(0)" data-target="#projects" data-nav="projects">Projects</a>
   <a href="javascript:void(0)" data-target="#skills" data-nav="skills">Skills</a>
+  <a href="javascript:void(0)" data-target="#job-match" data-nav="job-match">AI Job Match</a>
   <a href="javascript:void(0)" data-target="#contact" data-nav="contact">Contact</a>
 </nav>
 
 <main class="wrap">
 
   <!-- HERO -->
-  <section class="hero">
+  <section class="hero" style="border-top:none;">
     <div class="hero-grid">
       <div>
         <div class="eyebrow"><span class="pulse"></span>Open to new opportunities · Dubai, UAE</div>
@@ -447,7 +483,7 @@
 
   <!-- IMPACT -->
   <section id="impact" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">02</span><h2>Impact at a Glance</h2></div>
+    <div class="sec-head"><span class="sec-num mono">01</span><h2>Impact at a Glance</h2></div>
     <div class="impact-grid">
       <div class="impact-card"><div class="num"><span class="count" data-target="727" data-suffix="K">0</span></div><div class="label">Search impressions driven by SSR migration</div></div>
       <div class="impact-card amber"><div class="num"><span class="count" data-target="100" data-suffix="">0</span></div><div class="label">Google SEO score achieved on production pages</div></div>
@@ -460,16 +496,16 @@
 
   <!-- ABOUT -->
   <section id="about" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">03</span><h2>About</h2></div>
+    <div class="sec-head"><span class="sec-num mono">02</span><h2>About</h2></div>
     <div class="about-grid">
       <div>
-        <p>I'm an AI Software Engineer and performance-focused full stack developer specializing in AI workflow integration, Next.js, React.js, and Node.js — with a particular obsession with the metrics that actually move a product forward: Core Web Vitals, search visibility, and uptime.</p>
-        <p>Over the past 3+ years I've led the migration of a luxury eCommerce platform to Next.js, built fintech and trading platforms used by 5,000+ active users, and integrated AI capabilities into modern web products. I care about the intersection of engineering quality and business outcomes — SSR architecture that actually ranks, AI workflows that create value, and caching strategies that actually cut cost.</p>
+        <p>I'm a performance-focused full stack engineer specializing in Next.js, React.js, and Node.js — with a particular obsession with the metrics that actually move a product forward: Core Web Vitals, search visibility, and uptime.</p>
+        <p>Over the past 3+ years I've led the migration of a luxury eCommerce platform to Next.js, built fintech and trading platforms used by 5,000+ active users, and contributed to a project recognized by Guinness World Records. I care about the intersection of engineering quality and business outcomes — SSR architecture that actually ranks, and caching strategies that actually cut cost.</p>
       </div>
       <div class="fact-list mono">
         <div><span>Location</span><span>Dubai, UAE</span></div>
         <div><span>Experience</span><span>3+ Years</span></div>
-        <div><span>Focus</span><span>AI · Next.js · SEO · Cloud</span></div>
+        <div><span>Focus</span><span>Next.js · SEO · Cloud</span></div>
         <div><span>Education</span><span>B.Tech EEE, CUSAT</span></div>
         <div><span>GPA</span><span>8.5 / 10</span></div>
       </div>
@@ -478,7 +514,7 @@
 
   <!-- EXPERIENCE -->
   <section id="experience" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">04</span><h2>Experience</h2></div>
+    <div class="sec-head"><span class="sec-num mono">03</span><h2>Experience</h2></div>
 
     <div class="job">
       <div class="job-meta">
@@ -552,7 +588,7 @@
 
   <!-- PROJECTS -->
   <section id="projects" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">05</span><h2>Notable Projects</h2></div>
+    <div class="sec-head"><span class="sec-num mono">04</span><h2>Notable Projects</h2></div>
     <div class="proj-grid">
       <div class="proj-card">
         <div class="tag">Forex Education · LMS</div>
@@ -580,7 +616,7 @@
 
   <!-- SKILLS -->
   <section id="skills" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">06</span><h2>Technical Skills</h2></div>
+    <div class="sec-head"><span class="sec-num mono">05</span><h2>Technical Skills</h2></div>
     <div class="skills-grid">
       <div class="skill-cat">
         <h4>Languages &amp; Fundamentals</h4>
@@ -627,31 +663,9 @@
     </div>
   </section>
 
-  <!-- CERTIFICATIONS -->
-  <section id="certifications" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">07</span><h2>Certifications &amp; Achievements</h2></div>
-    <div class="achieve-grid">
-      <div class="achieve-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a6 6 0 100-12 6 6 0 000 12z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
-        <p><strong>Guinness World Records contributor</strong> — served as a core software developer on a project officially recognized by Guinness World Records, in collaboration with Delta International and Miles Capitals.</p>
-      </div>
-      <div class="achieve-card">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        <p><strong>Mentorship &amp; community</strong> — actively guides peers and juniors through mentorship and ongoing tech community engagement.</p>
-      </div>
-    </div>
-    <div class="cert-list mono">
-      <a href="https://omp.dub.ai/certificate/GfqskFNMInbu">One Million Prompters — Dubai Future Foundation <span class="arrow">↗</span></a>
-      <a href="https://namastedev.com/pranavkkeloth/certificates/namaste-interview">Frontend Development <span class="arrow">↗</span></a>
-      <a href="https://namastedev.com/pranavkkeloth/certificates/namaste-javascript">JavaScript Specialist Certification <span class="arrow">↗</span></a>
-      <a href="https://res.cloudinary.com/dcdydl2xr/image/upload/v1694589334/GigConnect/tcs%20ion%20certificate/TCS-iON_-_Pranav_K_-_Certificate_hzvapp.png">TCS-iON Career Edge Digital Program <span class="arrow">↗</span></a>
-      <a href="https://res.cloudinary.com/dcdydl2xr/image/upload/v1703064634/Screenshot_1144_xylayl.png">Agile Fundamentals — Great Learning <span class="arrow">↗</span></a>
-    </div>
-  </section>
-
   <!-- AI JOB MATCH -->
   <section id="job-match" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">08</span><h2>AI Job Match</h2></div>
+    <div class="sec-head"><span class="sec-num mono">06</span><h2>AI Job Match</h2></div>
     <p style="color:var(--muted); max-width:560px; margin-bottom:24px;">Paste a job description below to see how closely my skills align with it, which project fits the role best, and what I'd need to strengthen for a perfect match.</p>
     <div class="match-box">
       <textarea id="jdInput" placeholder="Paste a job description here… e.g. &quot;Looking for a Full Stack Engineer with Next.js, AWS, and strong SEO experience…&quot;"></textarea>
@@ -674,9 +688,31 @@
     </div>
   </section>
 
+  <!-- CERTIFICATIONS -->
+  <section id="certifications" class="reveal">
+    <div class="sec-head"><span class="sec-num mono">07</span><h2>Certifications &amp; Achievements</h2></div>
+    <div class="achieve-grid">
+      <div class="achieve-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15a6 6 0 100-12 6 6 0 000 12z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+        <p><strong>Guinness World Records contributor</strong> — served as a core software developer on a project officially recognized by Guinness World Records, in collaboration with Delta International and Miles Capitals.</p>
+      </div>
+      <div class="achieve-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <p><strong>Mentorship &amp; community</strong> — actively guides peers and juniors through mentorship and ongoing tech community engagement.</p>
+      </div>
+    </div>
+    <div class="cert-list mono">
+      <a href="https://omp.dub.ai/certificate/GfqskFNMInbu">One Million Prompters — Dubai Future Foundation <span class="arrow">↗</span></a>
+      <a href="https://namastedev.com/pranavkkeloth/certificates/namaste-interview">Frontend Development <span class="arrow">↗</span></a>
+      <a href="https://namastedev.com/pranavkkeloth/certificates/namaste-javascript">JavaScript Specialist Certification <span class="arrow">↗</span></a>
+      <a href="https://res.cloudinary.com/dcdydl2xr/image/upload/v1694589334/GigConnect/tcs%20ion%20certificate/TCS-iON_-_Pranav_K_-_Certificate_hzvapp.png">TCS-iON Career Edge Digital Program <span class="arrow">↗</span></a>
+      <a href="https://res.cloudinary.com/dcdydl2xr/image/upload/v1703064634/Screenshot_1144_xylayl.png">Agile Fundamentals — Great Learning <span class="arrow">↗</span></a>
+    </div>
+  </section>
+
   <!-- CONTACT -->
   <section id="contact" class="reveal">
-    <div class="sec-head"><span class="sec-num mono">09</span><h2>Contact</h2></div>
+    <div class="sec-head"><span class="sec-num mono">08</span><h2>Contact</h2></div>
     <div class="contact-box">
       <h2>Let's build something fast.</h2>
       <p>Open to full-time roles and freelance projects — reach out and I'll get back to you.</p>
