@@ -1210,6 +1210,39 @@
       transform: scale(1.03);
       transition: .3s ease;
     }
+
+    .nav-phone {
+      font-size: 14px;
+      color: var(--text);
+      text-decoration: none;
+      margin-left: 12px;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-phone:hover {
+      opacity: 0.7;
+    }
+
+    .more-projects {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .more-projects .proj-link,
+    .about-links .proj-link {
+      display: inline-flex;
+      padding: 12px 24px;
+      border: 1px solid var(--accent);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .more-projects .proj-link:hover,
+    .about-links .proj-link:hover {
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 
@@ -1233,6 +1266,11 @@
       </nav>
       <div class="nav-right">
         <a class="nav-cta" href="javascript:void(0)" data-target="#contact">Get in touch</a>
+        <a class="nav-phone"
+          href="https://wa.me/971569037361?text=Hi%20Pranav,%20I%20would%20like%20to%20connect%20with%20you."
+          target="_blank">
+          +971 56 903 7361
+        </a>
         <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -1539,27 +1577,30 @@
         </div>
 
 
-        <!-- CarltonEdu -->
+        <!-- Delta Institutions -->
         <div class="proj-card">
-          <img class="proj-image" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcarltonedu.com?w=800"
-            alt="CarltonEdu">
+          <img class="proj-image" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fdeltainstitutions.com?w=800"
+            onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800'"
+            alt="Delta Institutions Preview">
 
-          <div class="tag">Forex Education · LMS</div>
-          <h3>CarltonEdu</h3>
+          <div class="tag">Education · Institution Platform</div>
+          <h3>Delta Institutions</h3>
 
           <p>
-            Forex education platform with LMS features,
-            dashboards, course tracking and payment integrations.
+            Educational institution website built with a modern responsive design,
+            optimized user experience, structured content, and performance-focused
+            frontend development.
           </p>
 
           <div class="chip-row">
             <span class="chip">Next.js</span>
-            <span class="chip">LMS</span>
-            <span class="chip">Payments</span>
-            <span class="chip">Dashboards</span>
+            <span class="chip">React</span>
+            <span class="chip">SEO</span>
+            <span class="chip">Responsive UI</span>
+            <span class="chip">Performance</span>
           </div>
 
-          <a class="proj-link" href="https://carltonedu.com" target="_blank">
+          <a class="proj-link" href="https://deltainstitutions.com/" target="_blank">
             View Live Site →
           </a>
         </div>
@@ -1874,6 +1915,12 @@
           </a>
         </div>
 
+        <!-- More Projects Button -->
+        <div class="more-projects">
+          <a class="proj-link" href="https://github.com/PRANAVPADMANABHANK" target="_blank">
+            View More Projects on GitHub →
+          </a>
+        </div>
 
       </div>
     </section>
