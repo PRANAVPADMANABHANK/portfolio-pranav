@@ -1250,6 +1250,62 @@
       flex-wrap: wrap;
     }
 
+    .copy-email {
+      appearance: none;
+      cursor: pointer;
+      font-family: inherit;
+      background: transparent;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 26px;
+      bottom: 26px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(53, 214, 196, .42);
+      border-radius: 50%;
+      background: rgba(13, 21, 38, .88);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, .26);
+      color: var(--teal);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: opacity .2s ease, transform .2s ease, background .2s ease;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover { background: var(--teal-dim); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 60;
+      padding: 9px 13px;
+      border: 1px solid rgba(53, 214, 196, .35);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .28);
+      color: var(--text);
+      font: 12px 'JetBrains Mono', monospace;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 10px);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
     footer {
       padding: 36px 0 48px;
       text-align: center;
@@ -1376,6 +1432,8 @@
       .contact-box {
         padding: 36px 22px;
       }
+
+      .back-to-top { right: 16px; bottom: 16px; }
 
       .wrap {
         padding: 0 20px;
@@ -2311,12 +2369,16 @@
         <p>Open to full-time roles and freelance projects — reach out and I'll get back to you.</p>
         <div class="contact-links">
           <a class="btn-primary" href="mailto:pranavkofficial123@gmail.com">pranavkofficial123@gmail.com</a>
+          <button class="btn-ghost copy-email" id="copyEmailBtn" type="button">Copy email</button>
           <a class="btn-ghost" href="tel:+971569037361">+971 56 903 7361</a>
         </div>
       </div>
     </section>
 
   </main>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top">↑</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <footer>
     © <span id="year"></span> Pranav K
@@ -2344,6 +2406,38 @@
     }
     document.addEventListener('scroll', updateProgress, { passive: true });
     updateProgress();
+
+    // Utility controls for long portfolio pages.
+    const backToTop = document.getElementById('backToTop');
+    const toast = document.getElementById('toast');
+    let toastTimer;
+    function showToast(message) {
+      if (!toast) return;
+      toast.textContent = message;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+    function updateBackToTop() {
+      if (backToTop) backToTop.classList.toggle('show', window.scrollY > 520);
+    }
+    document.addEventListener('scroll', updateBackToTop, { passive: true });
+    updateBackToTop();
+    if (backToTop) {
+      backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    const copyEmailBtn = document.getElementById('copyEmailBtn');
+    if (copyEmailBtn) {
+      copyEmailBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText('pranavkofficial123@gmail.com');
+          showToast('Email copied to clipboard');
+        } catch (error) {
+          showToast('Email: pranavkofficial123@gmail.com');
+        }
+      });
+    }
 
     // Active nav link highlighting (desktop + mobile)
     const navLinks = document.querySelectorAll('[data-nav]');
