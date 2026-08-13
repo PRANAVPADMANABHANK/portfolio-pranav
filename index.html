@@ -853,6 +853,58 @@
       gap: 28px 44px;
     }
 
+    .skill-signal {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: -18px 0 34px;
+    }
+
+    .signal-item {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 11px 13px;
+    }
+
+    .signal-item span {
+      display: block;
+      color: var(--muted);
+      font: 11px 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: 9px;
+    }
+
+    .signal-track {
+      display: block;
+      height: 3px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(231, 236, 243, .09);
+    }
+
+    .signal-track::after {
+      content: '';
+      display: block;
+      width: 46%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      animation: skillSignal 2.8s ease-in-out infinite;
+    }
+
+    .signal-item:nth-child(2) .signal-track::after { animation-delay: .45s; }
+    .signal-item:nth-child(3) .signal-track::after {
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      animation-delay: .9s;
+    }
+
+    @keyframes skillSignal {
+      0%, 100% { transform: translateX(-105%); opacity: .55; }
+      50% { transform: translateX(230%); opacity: 1; }
+    }
+
     .skill-cat h4 {
       font-size: 13px;
       font-family: 'JetBrains Mono', monospace;
@@ -866,6 +918,37 @@
       color: var(--text);
       border-color: var(--line-strong);
       background: transparent;
+    }
+
+    /* Skill-led motion: brief, one-time entrances that reinforce the technical stack. */
+    .skill-cat.is-ready h4 {
+      animation: skillHeadingIn .45s ease both;
+    }
+
+    .skill-cat.is-ready .chip {
+      animation: skillChipIn .42s cubic-bezier(.16, 1, .3, 1) both;
+      animation-delay: var(--skill-delay, 0ms);
+    }
+
+    @keyframes skillHeadingIn {
+      from { opacity: 0; transform: translateX(-8px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes skillChipIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .monitor.is-live .metric {
+      animation: metricActivate .5s cubic-bezier(.16, 1, .3, 1) both;
+      animation-delay: var(--metric-delay, 0ms);
+    }
+
+    @keyframes metricActivate {
+      from { opacity: .45; transform: translateY(5px); }
+      70% { border-color: rgba(53, 214, 196, .38); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* CERTS */
@@ -1167,6 +1250,11 @@
 
       .skills-grid {
         grid-template-columns: 1fr;
+      }
+
+      .skill-signal {
+        grid-template-columns: 1fr;
+        gap: 9px;
       }
 
       .achieve-grid {
@@ -1940,6 +2028,11 @@
       <div class="sec-head"><span class="sec-num mono">05</span>
         <h2>Technical Skills</h2>
       </div>
+      <div class="skill-signal" aria-label="Core expertise">
+        <div class="signal-item"><span>AI systems &amp; integration</span><i class="signal-track"></i></div>
+        <div class="signal-item"><span>Full-stack engineering</span><i class="signal-track"></i></div>
+        <div class="signal-item"><span>Cloud, SEO &amp; performance</span><i class="signal-track"></i></div>
+      </div>
       <div class="skills-grid">
         <div class="skill-cat">
           <h4>Languages &amp; Fundamentals</h4>
@@ -2097,8 +2190,12 @@
     © <span id="year"></span> Pranav K
   </footer>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+<script>
+  // Serve the current resume as a standalone file instead of the legacy embedded PDF.
+  const resumeDownload = document.querySelector('.btn-resume');
+  if (resumeDownload) resumeDownload.href = 'assets/Pranav_K_Resume.pdf';
+
+  document.getElementById('year').textContent = new Date().getFullYear();
 
     // Reveal on scroll
     const obs = new IntersectionObserver((entries) => {
@@ -2319,6 +2416,37 @@
       });
     }, { threshold: 0.4 });
     counters.forEach(el => counterObs.observe(el));
+
+    // Run skill-specific motion once when the relevant content enters view.
+    const skillSection = document.getElementById('skills');
+    const skillCategories = document.querySelectorAll('.skill-cat');
+    const monitor = document.querySelector('.monitor');
+    const skillMotionObs = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+
+        if (entry.target === skillSection) {
+          skillCategories.forEach((category, categoryIndex) => {
+            category.querySelectorAll('.chip').forEach((chip, chipIndex) => {
+              chip.style.setProperty('--skill-delay', `${Math.min(chipIndex * 35, 280) + categoryIndex * 45}ms`);
+            });
+            category.classList.add('is-ready');
+          });
+        }
+
+        if (entry.target === monitor) {
+          monitor.querySelectorAll('.metric').forEach((metric, index) => {
+            metric.style.setProperty('--metric-delay', `${index * 85}ms`);
+          });
+          monitor.classList.add('is-live');
+        }
+
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.3 });
+
+    if (skillSection) skillMotionObs.observe(skillSection);
+    if (monitor) skillMotionObs.observe(monitor);
   </script>
 
 </body>
