@@ -61,7 +61,11 @@
       inset: 0;
       background-image:
         radial-gradient(600px circle at var(--mx, 15%) var(--my, 8%), rgba(53, 214, 196, 0.10), transparent 45%),
-        radial-gradient(circle at 85% 0%, rgba(245, 166, 35, 0.06), transparent 35%);
+        radial-gradient(circle at 85% 0%, rgba(245, 166, 35, 0.06), transparent 35%),
+        linear-gradient(rgba(132, 150, 181, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(132, 150, 181, .045) 1px, transparent 1px);
+      background-size: auto, auto, 52px 52px, 52px 52px;
+      background-position: center, center, center, center;
       pointer-events: none;
       z-index: 0;
       transition: background-position .3s ease;
@@ -838,6 +842,40 @@
       gap: 22px;
     }
 
+    .project-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: -20px 0 28px;
+    }
+
+    .project-filter {
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font: 500 11px 'JetBrains Mono', monospace;
+      padding: 7px 11px;
+      transition: background .2s, color .2s, border-color .2s, transform .2s;
+    }
+
+    .project-filter:hover,
+    .project-filter[aria-pressed="true"] {
+      color: var(--teal);
+      border-color: rgba(53, 214, 196, .5);
+      background: var(--teal-dim);
+    }
+
+    .project-filter:active { transform: translateY(1px); }
+    .proj-card.is-filtered { display: none; }
+
+    .project-filter-status {
+      margin: -15px 0 18px;
+      color: var(--muted-2);
+      font: 11px 'JetBrains Mono', monospace;
+    }
+
     .proj-card {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -1242,6 +1280,12 @@
     }
 
     @media (max-width:880px) {
+      .nav-inner {
+        padding: 14px 20px;
+        gap: 10px;
+        flex-wrap: nowrap;
+      }
+
       nav.links {
         display: none;
       }
@@ -1260,11 +1304,29 @@
 
       .nav-left {
         gap: 10px;
+        min-width: 0;
+      }
+
+      .nav-right { gap: 8px; flex-shrink: 0; }
+
+      .nav-phone {
+        display: inline-block;
+        margin-left: 0;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: -.02em;
+        white-space: nowrap;
+      }
+
+      .logo {
+        font-size: 16px;
+        white-space: nowrap;
       }
 
       .ai-cta {
         padding: 7px 10px;
-        font-size: 11.5px;
+        font-size: 10.5px;
+        flex-shrink: 0;
       }
 
       .hero-grid {
@@ -1278,6 +1340,10 @@
 
       .hero h1 {
         font-size: 38px;
+      }
+
+      .impact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .about-grid {
@@ -1317,6 +1383,10 @@
     }
 
     @media (max-width:380px) {
+      .impact-grid {
+        grid-template-columns: 1fr;
+      }
+
       .logo {
         font-size: 15px;
       }
@@ -1328,6 +1398,8 @@
       .ai-cta {
         padding: 8px 9px;
       }
+
+      .nav-phone { font-size: 10px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1608,7 +1680,7 @@
       <div class="job">
         <div class="job-meta">
           <div class="dates">JUN 2023 — JUN 2025</div>
-          <div class="company">Delta International</div>
+          <div class="company"><a href="https://deltainstitutions.com/" target="_blank" rel="noopener noreferrer" style="color:inherit; border-bottom:1px dotted var(--muted-2);">Delta International ↗</a></div>
           <div class="loc">Dubai, UAE</div>
         </div>
         <div>
@@ -1636,7 +1708,7 @@
       <div class="job">
         <div class="job-meta">
           <div class="dates">SEP 2022 — JUN 2023</div>
-          <div class="company">Miztech AI Minds</div>
+          <div class="company"><a href="https://www.mitz.ai/" target="_blank" rel="noopener noreferrer" style="color:inherit; border-bottom:1px dotted var(--muted-2);">Miztech AI Minds ↗</a></div>
           <div class="loc">Ernakulam, India</div>
         </div>
         <div>
@@ -1662,6 +1734,14 @@
         <span class="sec-num mono">04</span>
         <h2>Notable Projects</h2>
       </div>
+      <div class="project-filters" aria-label="Filter projects by expertise">
+        <button class="project-filter" type="button" data-project-filter="all" aria-pressed="true">All work</button>
+        <button class="project-filter" type="button" data-project-filter="ai">AI &amp; automation</button>
+        <button class="project-filter" type="button" data-project-filter="fullstack">Full stack</button>
+        <button class="project-filter" type="button" data-project-filter="frontend">Frontend</button>
+        <button class="project-filter" type="button" data-project-filter="performance">Performance &amp; SEO</button>
+      </div>
+      <p class="project-filter-status" id="projectFilterStatus" aria-live="polite">Showing all projects</p>
 
       <div class="proj-grid">
 
@@ -2499,6 +2579,35 @@
 
     if (skillSection) skillMotionObs.observe(skillSection);
     if (monitor) skillMotionObs.observe(monitor);
+
+    // Project explorer: helps recruiters focus on the most relevant work.
+    const projectFilterButtons = document.querySelectorAll('[data-project-filter]');
+    const projectExplorerCards = document.querySelectorAll('.proj-card');
+    const projectFilterStatus = document.getElementById('projectFilterStatus');
+    const filterMatchers = {
+      ai: /\b(ai|automation|openai|chat)\b/i,
+      fullstack: /\b(node|express|mongodb|postgresql|prisma|database|mern|backend)\b/i,
+      frontend: /\b(react|next\.js|angular|typescript|frontend|ui)\b/i,
+      performance: /\b(seo|performance|ssr|core web vitals|lighthouse)\b/i
+    };
+
+    projectFilterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.projectFilter;
+        let visibleCount = 0;
+        projectExplorerCards.forEach(card => {
+          const visible = filter === 'all' || filterMatchers[filter].test(card.textContent);
+          card.classList.toggle('is-filtered', !visible);
+          if (visible) visibleCount += 1;
+        });
+        projectFilterButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        if (projectFilterStatus) {
+          projectFilterStatus.textContent = filter === 'all'
+            ? `Showing all ${visibleCount} projects`
+            : `Showing ${visibleCount} ${button.textContent.trim().toLowerCase()} projects`;
+        }
+      });
+    });
   </script>
 
 </body>
